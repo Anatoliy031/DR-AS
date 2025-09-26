@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Акт дружеского осмотра — Семейкин Антон Юрьевич</title>
+
+<!-- Шрифты -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg-1:#060914;
+    --bg-2:#0a1024;
+    --card:#0f172aee;
+    --border:#3b82f6;
+    --accent:#22d3ee;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --ok:#22c55e;
+    --warn:#f59e0b;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans",sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1200px 600px at 70% -10%, #1b2556 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, #0d1b47 0%, transparent 55%),
+      linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    overflow-x:hidden;
+  }
+
+  /* Звёздная пыль */
+  .stars,.stars2{
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-repeat:repeat;
+    background-image:radial-gradient(2px 2px at 20px 30px,#ffffff66 50%,transparent 51%),
+                     radial-gradient(1px 1px at 130px 80px,#ffffff4d 50%,transparent 51%),
+                     radial-gradient(2px 2px at 200px 120px,#ffffff40 50%,transparent 51%),
+                     radial-gradient(1px 1px at 80px 200px,#ffffff33 50%,transparent 51%);
+    animation: drift 140s linear infinite;
+    opacity:.35;
+  }
+  .stars2{ animation-duration: 220s; opacity:.2; filter: blur(0.3px); }
+  @keyframes drift{ from{background-position:0 0,0 0,0 0,0 0} to{background-position:1000px 400px,800px 600px,1200px 900px,600px 1200px} }
+
+  /* Холст фейерверков */
+  #fw{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+
+  /* Карточка */
+  .wrap{position:relative; z-index:2; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:16px;}
+  .card{
+    width:min(920px,100%);
+    backdrop-filter:saturate(140%) blur(8px);
+    background:linear-gradient(180deg, rgba(17,24,39,0.85), rgba(15,23,42,0.92));
+    border:1px solid #334155;
+    border-radius:18px;
+    box-shadow:0 20px 60px #00000070, inset 0 0 0 1px #ffffff0a;
+    overflow:hidden;
+  }
+  .hdr{
+    padding:22px 20px 16px;
+    background:
+      linear-gradient(180deg, #0ea5e980 0%, #3b82f680 100%),
+      linear-gradient(180deg, #0b1226 0%, #0b1226 100%);
+    border-bottom:1px solid #1f2a44;
+  }
+  .badge{
+    display:inline-block; padding:6px 10px; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    border:1px solid #60a5fa; border-radius:999px; color:#e0f2fe; background:#0b1836cc;
+  }
+  h1{
+    margin:10px 0 0; font-size:clamp(20px,4.5vw,30px); line-height:1.2; font-weight:900;
+    letter-spacing:.02em; color:#eaf2ff;
+    text-shadow:0 0 18px #1e40af66, 0 0 2px #000;
+  }
+  .sub{ margin-top:6px; color:#c7d2fe; font-size:14px }
+  .content{ padding:18px 18px 24px; }
+
+  .pair{ display:grid; grid-template-columns:1fr; gap:10px; margin:14px 0 8px }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .kv{ padding:10px 12px; border:1px solid #27334f; border-radius:12px; background:#0b1220aa; color:#cbd5e1; font-size:14px }
+
+  h2{ margin:18px 0 8px; font-size:18px; color:#e2e8f0; border-left:3px solid #38bdf8; padding-left:10px }
+  ul{ margin:8px 0 14px 0; padding-left:18px }
+  li{ margin:6px 0; line-height:1.5 }
+  .ok{ color:var(--ok); font-weight:600 }
+  .muted{ color:var(--muted) }
+
+  .footer{
+    padding:14px 18px 20px; border-top:1px solid #1f2a44; background:linear-gradient(180deg,#0b1226,#0b1226d9);
+    display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
+  }
+  .sig{ font-size:14px; color:#cbd5e1 }
+  .script{
+    font-family:"Dancing Script",cursive; font-size:clamp(28px,8vw,44px);
+    color:#fff; text-shadow:0 4px 30px #ef444399, 0 2px 8px #000a; letter-spacing:.5px
+  }
+
+  /* Кнопки управления */
+  .controls{
+    position:fixed; right:12px; bottom:12px; z-index:3; display:flex; gap:10px; flex-direction:column;
+  }
+  .btn{
+    appearance:none; border:none; cursor:pointer;
+    padding:10px 12px; border-radius:12px; font-weight:600; color:#0b1220;
+    background:#e2e8f0; box-shadow:0 6px 16px #00000040; transition: transform .15s ease, filter .2s;
+  }
+  .btn:active{ transform: translateY(1px) }
+  .btn.sec{ background:#93c5fd; }
+  .btn.ghost{ background:#0b1220cc; color:#e2e8f0; border:1px solid #334155 }
+
+  /* Плашка Включить звук */
+  .unmute{
+    position:fixed; inset:auto 12px 12px 12px; z-index:4;
+    display:none; align-items:center; gap:10px;
+    padding:12px 14px; border-radius:14px; background:#0b1220f2; border:1px solid #334155; color:#e2e8f0;
+    box-shadow:0 10px 30px #0008;
+  }
+  .unmute.show{ display:flex; animation: pop .18s ease }
+  @keyframes pop{ from{transform:scale(.96); opacity:.5} to{transform:scale(1); opacity:1} }
+
+  /* Анимация печати */
+  .type-line{ border-right:2px solid #60a5fa; white-space:pre-wrap }
+  .typed{ border-right:none }
+
+  @media (min-width:640px){
+    .pair{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="stars2"></div>
+<canvas id="fw"></canvas>
+
+<div class="wrap">
+  <article class="card" id="card">
+    <header class="hdr">
+      <span class="badge">АКТ внепланового дружеского осмотра</span>
+      <h1 class="type-line" data-text="«Семейкин Антон Юрьевич» № 001 от 26.09.2025"></h1>
+      <div class="sub type-line" data-text="Основание: наступление календарного события «День рождения»."></div>
+    </header>
+
+    <div class="content">
+      <div class="pair">
+        <div class="kv type-line" data-text="Место: г. Москва"></div>
+        <div class="kv type-line" data-text="Комиссия: председатель — Абусалимов Анатолий Лачинович; члены семьи (по списку)."></div>
+      </div>
+
+      <p class="type-line" data-text="Цель: оценка готовности Объекта к очередному году здоровья, веселья и побед."></p>
+      <p class="type-line" data-text="Применённые методы: визуальный осмотр, стресс-тест тостами, дегустация, замер уровня счастья, диалог шутками."></p>
+
+      <h2>1. Ход проверки (основные узлы)</h2>
+      <ul id="sec1">
+        <li class="type-line" data-text="Нервная система — сталь, улыбается при любом раскладе. ✅"></li>
+        <li class="type-line" data-text="Командный дух — поднимает окружающих выше планки. ✅"></li>
+        <li class="type-line" data-text="Экономическая безопасность — инцидентов не выявлено. ✅"></li>
+        <li class="type-line" data-text="Модуль самоиронии — в рабочем состоянии, отвечает шуткой на шутку. ✅"></li>
+        <li class="type-line" data-text="Золотодобывающий контур — отлажен: ни одна золотая пылинка при добыче не теряется; потери Au — 0,0 г (норма: 0,0 г). ✅"></li>
+      </ul>
+
+      <h2>2. Результаты измерений</h2>
+      <ul id="sec2">
+        <li class="type-line" data-text="KPI счастья — 100%."></li>
+        <li class="type-line" data-text="Запас здоровья — полный бак."></li>
+        <li class="type-line" data-text="Планы — амбициозны и реализуемы."></li>
+        <li class="type-line" data-text="Уровень харизмы — выше средней."></li>
+      </ul>
+
+      <h2>3. Выявленные недостатки</h2>
+      <ul id="sec3">
+        <li class="type-line" data-text="Склонность работать, когда остальные уже празднуют — устранить повышением доли праздника."></li>
+        <li class="type-line" data-text="Хроническое лидерство — оставить, но добавить смехом и хорошим настроением."></li>
+        <li class="type-line" data-text="Недобор отпусков — закрыть до конца года."></li>
+      </ul>
+
+      <h2>4. Рекомендации комиссии</h2>
+      <ul id="sec4">
+        <li class="type-line" data-text="Продолжать добывать золото из любых ситуаций: всё, что блестит — в слитки «здоровье/возможности/правильные люди/деньжата 😉»."></li>
+        <li class="type-line" data-text="Премии — ежемесячно, отчёты — раз в пятилетку 😂."></li>
+        <li class="type-line" data-text="Режим на год — кайфовать от всего и присылать фоточки."></li>
+      </ul>
+
+      <p class="type-line" data-text="Заключение: Объект «Семейкин А. Ю.» признан эталонным и годным к дальнейшей эксплуатации в режиме «Счастье ×100»."></p>
+
+      <div class="pair" style="margin-top:8px">
+        <div class="kv type-line" data-text="Подписи: Председатель — Абусалимов Анатолий Лачинович /Толян/"></div>
+        <div class="kv type-line" data-text="Члены комиссии: Абусалимова Ирина Алексеевна /Иришка/; Абусалимова Арина Анатольевна /Аришка/"></div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="sig script">С днём рождения, братулец! 🎉</div>
+      <div class="row">
+        <button class="btn ghost" id="skip">Показать всё сразу</button>
+        <button class="btn sec" id="muteBtn">🔊 Звук</button>
+      </div>
+    </footer>
+  </article>
+</div>
+
+<!-- Плашка включения звука (если автозапуск заблокирован) -->
+<div class="unmute" id="unmute">
+  <span>🔈 Включить звук?</span>
+  <button class="btn sec" id="unmuteBtn">Включить</button>
+</div>
+
+<audio id="bgm" src="music.mp3" preload="auto" loop></audio>
+
+<script>
+/* ====== Плавная печать текста ====== */
+(function(){
+  const SPEED = 16;       // скорость печати (мс за символ)
+  const PAUSE = 250;      // пауза между строками
+  const lines = Array.from(document.querySelectorAll('.type-line'));
+  let stopTyping = false;
+
+  function typeOne(el, text){
+    return new Promise(resolve=>{
+      el.textContent = '';
+      let i = 0;
+      const tick = () => {
+        if(stopTyping){ el.textContent = text; el.classList.add('typed'); return resolve(); }
+        if(i < text.length){
+          el.textContent += text[i++];
+          setTimeout(tick, SPEED);
+        }else{
+          el.classList.add('typed');
+          setTimeout(resolve, PAUSE);
+        }
+      };
+      tick();
+    });
+  }
+
+  async function run(){
+    for(const el of lines){
+      const t = el.dataset.text || el.textContent;
+      await typeOne(el, t);
+    }
+  }
+
+  // Кнопка "Показать всё сразу"
+  document.getElementById('skip').addEventListener('click', ()=>{
+    stopTyping = true;
+    lines.forEach(el => {
+      el.textContent = el.dataset.text || el.textContent;
+      el.classList.add('typed');
+    });
+  });
+
+  // Небольшая задержка старта, чтобы прогрузились шрифты
+  setTimeout(run, 500);
+})();
+
+/* ====== Музыка: автозапуск + управление ====== */
+(function(){
+  const audio = document.getElementById('bgm');
+  const muteBtn = document.getElementById('muteBtn');
+  const unmute = document.getElementById('unmute');
+  const unmuteBtn = document.getElementById('unmuteBtn');
+
+  let muted = false;
+
+  async function tryPlay(){
+    try{
+      audio.volume = 0;
+      await audio.play();
+      // плавный фейд-ин
+      let v = 0;
+      const step = () => {
+        v += 0.02;
+        audio.volume = Math.min(0.6, v);
+        if(v < 0.6 && !audio.paused) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+      unmute.classList.remove('show');
+    }catch(e){
+      // требуется жест
+      unmute.classList.add('show');
+    }
+  }
+
+  function toggleMute(){
+    if(audio.muted || audio.volume === 0){
+      audio.muted = false;
+      audio.volume = 0.6;
+      muted = false;
+      muteBtn.textContent = '🔊 Звук';
+    }else{
+      audio.muted = true;
+      muted = true;
+      muteBtn.textContent = '🔇 Без звука';
+    }
+  }
+
+  muteBtn.addEventListener('click', toggleMute);
+  unmuteBtn.addEventListener('click', async ()=>{
+    unmute.classList.remove('show');
+    await audio.play();
+    audio.muted = false; audio.volume = 0.6;
+  });
+
+  // Старт при загрузке
+  window.addEventListener('load', tryPlay, {once:true});
+})();
+
+/* ====== Фейерверки на canvas ====== */
+(function(){
+  const canvas = document.getElementById('fw');
+  const ctx = canvas.getContext('2d');
+  let w, h, dpr;
+  function resize(){
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    w = canvas.width = Math.floor(innerWidth * dpr);
+    h = canvas.height = Math.floor(innerHeight * dpr);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+  }
+  addEventListener('resize', resize); resize();
+
+  const rand = (min,max)=>Math.random()*(max-min)+min;
+  const TAU = Math.PI*2;
+
+  const rockets = [];
+  const sparks = [];
+
+  function hueColor(){
+    const h = Math.floor(rand(0,360));
+    return `hsl(${h} 100% 60%)`;
+  }
+
+  function launch(x=rand(0.15*w,0.85*w)){
+    rockets.push({
+      x, y:h+20, vx:rand(-0.6,0.6), vy:rand(-11.5,-9.5),
+      color:hueColor(), life:0, explodeY:rand(0.25*h,0.45*h)
+    });
+  }
+
+  function explode(x,y,color){
+    const n = Math.floor(rand(60,90));
+    for(let i=0;i<n;i++){
+      const ang = rand(0,TAU);
+      const spd = rand(2.5,5.2);
+      sparks.push({
+        x, y,
+        vx: Math.cos(ang)*spd,
+        vy: Math.sin(ang)*spd,
+        alpha:1,
+        color,
+        size: rand(1.5,2.4),
+        gravity:0.035*dpr,
+        friction:0.995,
+        flicker: Math.random()<.2
+      });
+    }
+  }
+
+  let last = 0, acc = 0;
+  function tick(ts){
+    const dt = Math.min(32, ts - last); last = ts; acc += dt;
+    // фоновая дымка
+    ctx.globalCompositeOperation='destination-out';
+    ctx.fillStyle='rgba(0,0,0,0.18)';
+    ctx.fillRect(0,0,w,h);
+    ctx.globalCompositeOperation='lighter';
+
+    // ракеты
+    for(let i=rockets.length-1;i>=0;i--){
+      const r = rockets[i];
+      r.life += dt;
+      r.vy += 0.012*dpr;
+      r.x += r.vx*dpr;
+      r.y += r.vy*dpr;
+
+      // след
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, 2.2*dpr, 0, TAU);
+      ctx.fillStyle = r.color;
+      ctx.fill();
+
+      if(r.y <= r.explodeY || r.vy>0){
+        explode(r.x,r.y,r.color);
+        rockets.splice(i,1);
+      }
+    }
+
+    // искры
+    for(let i=sparks.length-1;i>=0;i--){
+      const p = sparks[i];
+      p.vx *= p.friction;
+      p.vy = p.vy*p.friction + p.gravity;
+      p.x += p.vx*dpr;
+      p.y += p.vy*dpr;
+      p.alpha *= 0.985;
+
+      if(p.alpha<=0.02 || p.y>h+10){ sparks.splice(i,1); continue; }
+
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, TAU);
+      ctx.fill();
+
+      if(p.flicker && Math.random()<0.1){
+        ctx.beginPath();
+        ctx.arc(p.x+rand(-1,1), p.y+rand(-1,1), p.size*0.6, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // запуск каждые 700-1000мс
+    if(acc>rand(700,1000)){
+      acc = 0;
+      launch();
+      if(Math.random()<0.35) launch(rand(0.15*w,0.85*w));
+    }
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // запуск по тапу
+  addEventListener('pointerdown', (e)=>{
+    const x = (e.clientX || innerWidth/2) * (w/innerWidth);
+    const y = (e.clientY || innerHeight/2) * (h/innerHeight);
+    explode(x,y,hueColor());
+  }, {passive:true});
+})();
+</script>
+</body>
+</html>
